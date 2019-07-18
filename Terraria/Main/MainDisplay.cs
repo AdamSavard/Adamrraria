@@ -3848,7 +3848,7 @@ namespace Terraria
                         Main.essScale = 0.7f;
                     }
                 }
-                for (int num71 = 0; num71 < 400; num71++)
+                for (int num71 = 0; num71 < Main.itemLimit; num71++)
                 {
                     if (Main.item[num71].active && Main.item[num71].type > 0)
                     {

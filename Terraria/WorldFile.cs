@@ -855,6 +855,23 @@ namespace Terraria
 			writer.Write((int)Main.cloudBGActive);
 			writer.Write((short)Main.numClouds);
 			writer.Write(Main.windSpeedSet);
+			for (int l = 0; l < Main.itemLimit + 1; l++)
+            {
+                Item item = Main.item[l];
+                if (item == null)
+                {
+                    writer.Write((short)0);
+                }
+                else
+                {
+                    writer.Write((short)item.stack);
+                    if (item.stack > 0)
+                    {
+                        writer.Write(item.netID);
+                        writer.Write(item.prefix);
+                    }
+                }
+            }
 			return (int)writer.BaseStream.Position;
 		}
 		private static int SaveWorldTiles(BinaryWriter writer)
@@ -1303,6 +1320,19 @@ namespace Terraria
 			Main.numClouds = (int)reader.ReadInt16();
 			Main.windSpeedSet = reader.ReadSingle();
 			Main.windSpeed = Main.windSpeedSet;
+			Main.item = new Item[Main.itemLimit + 1];
+            for (int j = 0; j < Main.itemLimit + 1; j++)
+            {
+                short stack = reader.ReadInt16();
+                Item item = new Item();
+                if (stack > 0)
+                {
+                    item.netDefaults(reader.ReadInt32());
+                    item.stack = (int)stack;
+                    item.Prefix((int)reader.ReadByte());
+                }
+                Main.item[j] = item;
+            }
 		}
 		private static void LoadWorldTiles(BinaryReader reader, bool[] importance)
 		{

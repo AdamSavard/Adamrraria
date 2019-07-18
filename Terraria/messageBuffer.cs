@@ -689,7 +689,7 @@ namespace Terraria
 											NetMessage.SendData(11, this.whoAmI, -1, "", num11, (float)num12, (float)(num13 - 1), (float)(num14 - 1), 0);
 										}
 										NetMessage.SendData(11, this.whoAmI, -1, "", num15, (float)num16, (float)(num17 - 1), (float)(num18 - 1), 0);
-										for (int num24 = 0; num24 < 400; num24++)
+										for (int num24 = 0; num24 < Main.itemLimit; num24++)
 										{
 											if (Main.item[num24].active)
 											{

@@ -18999,7 +18999,7 @@ namespace Terraria
 			}
 			if (!Main.mouseText)
 			{
-				for (int i = 0; i < 400; i++)
+				for (int i = 0; i < Main.itemLimit; i++)
 				{
 					if (Main.item[i].active)
 					{

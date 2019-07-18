@@ -34149,7 +34149,7 @@ namespace Terraria
 				{
 					if (this.owner == Main.myPlayer && (this.createTile >= 0 || this.createWall > 0 || (this.ammo > 0 && !this.notAmmo) || this.consumable || (this.type >= 71 && this.type <= 74)) && this.stack < this.maxStack)
 					{
-						for (int j = i + 1; j < 400; j++)
+						for (int j = i + 1; j < Main.itemLimit; j++)
 						{
 							if (Main.item[j].active && Main.item[j].type == this.type && Main.item[j].stack > 0 && Main.item[j].owner == this.owner)
 							{
@@ -34727,8 +34727,8 @@ namespace Terraria
 			{
 				return 0;
 			}
-			int num = 400;
-			Main.item[400] = new Item();
+			int num = Main.itemLimit;
+			Main.item[num] = new Item();
 			if (Main.halloween)
 			{
 				if (Type == 58)
@@ -34753,7 +34753,7 @@ namespace Terraria
 			}
 			if (Main.netMode != 1)
 			{
-				for (int i = 0; i < 400; i++)
+				for (int i = 0; i < Main.itemLimit; i++)
 				{
 					if (!Main.item[i].active)
 					{
@@ -34765,7 +34765,7 @@ namespace Terraria
 			if (num == 400 && Main.netMode != 1)
 			{
 				int num2 = 0;
-				for (int j = 0; j < 400; j++)
+				for (int j = 0; j < Main.itemLimit; j++)
 				{
 					if (Main.item[j].spawnTime > num2)
 					{

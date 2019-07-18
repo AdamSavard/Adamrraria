@@ -1739,7 +1739,7 @@ namespace Terraria
 			{
 				Main.gore[num5] = new Gore();
 			}
-			for (int num6 = 0; num6 < 400; num6++)
+			for (int num6 = 0; num6 < Main.itemLimit; num6++)
 			{
 				Main.item[num6] = new Item();
 			}

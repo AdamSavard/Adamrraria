@@ -1217,7 +1217,7 @@ namespace Terraria
                     Netplay.disconnect = true;
                 }
             }
-            for (int i = 0; i < 400; i++)
+            for (int i = 0; i < Main.itemLimit; i++)
             {
                 if (Main.item[i].active && Main.item[i].owner == Main.myPlayer)
                 {
@@ -1265,7 +1265,7 @@ namespace Terraria
                 }
                 Main.lastItemUpdate = num;
             }
-            for (int j = 0; j < 400; j++)
+            for (int j = 0; j < Main.itemLimit; j++)
             {
                 if (Main.item[j].active && (Main.item[j].owner == 255 || !Main.player[Main.item[j].owner].active))
                 {

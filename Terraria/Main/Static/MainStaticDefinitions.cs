@@ -709,7 +709,8 @@ namespace Terraria
         public static Tile[,] tile = new Tile[Main.maxTilesX, Main.maxTilesY];
         public static Dust[] dust = new Dust[6001];
         public static Star[] star = new Star[130];
-        public static Item[] item = new Item[401];
+        public static Item[] item = new Item[1001];
+        public static int itemLimit = 1000;
         public static NPC[] npc = new NPC[201];
         public static Gore[] gore = new Gore[501];
         public static Rain[] rain = new Rain[Main.maxRain + 1];
@@ -812,7 +813,7 @@ namespace Terraria
 			Path.DirectorySeparatorChar,
 			"My Games",
 			Path.DirectorySeparatorChar,
-			"Terraria"
+			"TerrariaAdam"
 		});
         public static string WorldPath = Main.SavePath + Path.DirectorySeparatorChar + "Worlds";
         public static string PlayerPath = Main.SavePath + Path.DirectorySeparatorChar + "Players";
