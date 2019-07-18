@@ -10,6 +10,7 @@ namespace Terraria
 {
 	public class Player
 	{
+        public Guid id;
 		public const int maxBuffs = 22;
 		public int beetleOrbs;
 		public float beetleCounter;
@@ -5548,7 +5549,7 @@ namespace Terraria
 					this.headVelocity.X = this.headVelocity.X * 0.99f;
 					this.bodyVelocity.X = this.bodyVelocity.X * 0.99f;
 					this.legVelocity.X = this.legVelocity.X * 0.99f;
-					if (this.difficulty == 2)
+					if (this.difficulty == 2) // Hardcore, no respawn
 					{
 						if (this.respawnTimer > 0)
 						{
@@ -9781,7 +9782,7 @@ namespace Terraria
 							this.velocity.Y = 1E-05f;
 						}
 					}
-					for (int num148 = 0; num148 < 400; num148++)
+					for (int num148 = 0; num148 < Main.itemLimit; num148++)
 					{
 						if (Main.item[num148].active && Main.item[num148].noGrabDelay == 0 && Main.item[num148].owner == i)
 						{
@@ -14278,7 +14279,61 @@ namespace Terraria
 				Main.screenPosition.Y = this.position.Y + (float)(this.height / 2) - (float)(Main.screenHeight / 2);
 			}
 		}
-		public void ShadowDodge()
+        public void SpawnReturn(float posX, float posY)
+        {
+            if (this.whoAmi == Main.myPlayer)
+            {
+                if (Main.mapTime < 5)
+                {
+                    Main.mapTime = 5;
+                }
+                Main.quickBG = 10;
+                Main.maxQ = true;
+            }
+            this.headPosition = default(Vector2);
+            this.bodyPosition = default(Vector2);
+            this.legPosition = default(Vector2);
+            this.headRotation = 0f;
+            this.bodyRotation = 0f;
+            this.legRotation = 0f;
+            this.lavaTime = this.lavaMax;
+            if (this.statLife <= 0)
+            {
+                this.statLife = 100;
+                this.breath = this.breathMax;
+                if (this.spawnMax)
+                {
+                    this.statLife = this.statLifeMax;
+                    this.statMana = this.statManaMax2;
+                }
+            }
+            this.immune = true;
+            this.dead = false;
+            this.immuneTime = 0;
+            this.active = true;
+            this.position.X = posX;
+            this.position.Y = posY;
+            this.wet = false;
+            this.wetCount = 0;
+            this.lavaWet = false;
+            this.fallStart = (int)(this.position.Y / 16f);
+            this.velocity.X = 0f;
+            this.velocity.Y = 0f;
+            this.talkNPC = -1;
+            this.immuneTime = 60;
+            if (this.whoAmi == Main.myPlayer)
+            {
+                Main.BlackFadeIn = 255;
+                Main.renderNow = true;
+                if (Main.netMode == 1)
+                {
+                    Netplay.newRecent();
+                }
+                Main.screenPosition.X = this.position.X + (float)(this.width / 2) - (float)(Main.screenWidth / 2);
+                Main.screenPosition.Y = this.position.Y + (float)(this.height / 2) - (float)(Main.screenHeight / 2);
+            }
+        }
+        public void ShadowDodge()
 		{
 			this.immune = true;
 			this.immuneTime = 80;
@@ -14714,22 +14769,22 @@ namespace Terraria
 			}
 			this.mount = 0;
 			this.dead = true;
-			this.respawnTimer = 600;
-			bool flag = false;
+			this.respawnTimer = 300;
+			bool inABossFight = false;
 			if (Main.netMode != 0 && !pvp)
 			{
 				for (int k = 0; k < 200; k++)
 				{
 					if (Main.npc[k].active && (Main.npc[k].boss || Main.npc[k].type == 13 || Main.npc[k].type == 14 || Main.npc[k].type == 15) && Math.Abs(this.center().X - Main.npc[k].center().X) + Math.Abs(this.center().Y - Main.npc[k].center().Y) < 4000f)
 					{
-						flag = true;
+                        inABossFight = true;
 						break;
 					}
 				}
 			}
-			if (flag)
+			if (inABossFight)
 			{
-				this.respawnTimer += 600;
+				this.respawnTimer += 900;
 			}
 			this.immuneAlpha = 0;
 			this.palladiumRegen = false;
@@ -21278,11 +21333,17 @@ namespace Terraria
 				File.Copy(playerPath, destFileName, true);
 			}
 			string text = playerPath + ".dat";
+            // extra initialization on very first save
+            if (Guid.Empty.Equals(newPlayer.id))
+            {
+                newPlayer.id = Guid.NewGuid();
+            }
 			using (FileStream fileStream = new FileStream(text, FileMode.Create))
 			{
 				using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
 				{
 					binaryWriter.Write(Main.curRelease);
+                    binaryWriter.Write(newPlayer.id.ToByteArray());
 					binaryWriter.Write(newPlayer.name);
 					binaryWriter.Write(newPlayer.difficulty);
 					binaryWriter.Write(newPlayer.hair);
@@ -21436,6 +21497,7 @@ namespace Terraria
 							result = player;
 							return result;
 						}
+                        player.id = new Guid(binaryReader.ReadBytes(16));
 						player.name = binaryReader.ReadString();
 						if (num >= 10)
 						{
@@ -22322,6 +22384,7 @@ namespace Terraria
 		}
 		public Player()
 		{
+            this.id = Guid.Empty;
 			this.name = string.Empty;
 			for (int i = 0; i < 59; i++)
 			{

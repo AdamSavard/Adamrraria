@@ -1486,7 +1486,12 @@ namespace Terraria
 			{
 				Main.gameMenu = false;
 			}
-			Main.player[Main.myPlayer].Spawn();
+            if (Main.player[Main.myPlayer].id.Equals(WorldFile.savedPlayer))
+            {
+                Main.player[Main.myPlayer].SpawnReturn(WorldFile.savedPosX, WorldFile.savedPosY);
+            } else {
+                Main.player[Main.myPlayer].Spawn();
+            }
 			Main.player[Main.myPlayer].UpdatePlayer(Main.myPlayer);
 			Main.dayTime = WorldFile.tempDayTime;
 			Main.time = WorldFile.tempTime;

@@ -15,6 +15,9 @@ namespace Terraria
 		public static bool tempEclipse = Main.eclipse;
 		public static int tempMoonPhase = Main.moonPhase;
 		public static int versionNumber;
+        public static Guid savedPlayer;
+        public static float savedPosX;
+        public static float savedPosY;
 		public static void loadWorld()
 		{
 			Main.checkXMas();
@@ -872,7 +875,19 @@ namespace Terraria
                     }
                 }
             }
-			return (int)writer.BaseStream.Position;
+            if (Main.player[Main.myPlayer].active)
+            {
+                writer.Write(Main.player[Main.myPlayer].id.ToByteArray());
+                writer.Write(Main.player[Main.myPlayer].position.X);
+                writer.Write(Main.player[Main.myPlayer].position.Y);
+            }
+            else
+            {
+                writer.Write(new byte[16]);
+                writer.Write((float)0);
+                writer.Write((float)0);
+            }
+            return (int)writer.BaseStream.Position;
 		}
 		private static int SaveWorldTiles(BinaryWriter writer)
 		{
@@ -1333,7 +1348,10 @@ namespace Terraria
                 }
                 Main.item[j] = item;
             }
-		}
+            WorldFile.savedPlayer = new Guid(reader.ReadBytes(16));
+            WorldFile.savedPosX = reader.ReadSingle();
+            WorldFile.savedPosY = reader.ReadSingle();
+        }
 		private static void LoadWorldTiles(BinaryReader reader, bool[] importance)
 		{
 			for (int i = 0; i < Main.maxTilesX; i++)
