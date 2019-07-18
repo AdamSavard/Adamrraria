@@ -7,34 +7,34 @@ namespace Terraria.Terraria.Entities
 {
     public abstract class BuffEffectFollower : BuffEffect
     {
-        public int projectileID
+        public virtual int ProjectileID
         {
             protected set;
             get;
         }
 
-        protected abstract void applyOverridable(Player target);
-        public override void apply(ref int buffTime, Player target)
+        protected abstract void ApplyOverridable(Player target);
+        public override void Apply(ref int buffTime, Player target)
         {
             buffTime = 18000;
-            applyOverridable(target);
+            ApplyOverridable(target);
             for (int i = 0; i < 1000; i++)
             {
                 if (Main.projectile[i].active
                     && Main.projectile[i].owner == target.whoAmi
-                    && Main.projectile[i].type == projectileID)
+                    && Main.projectile[i].type == ProjectileID)
                     return;
             }
-            Projectile.NewProjectile(target.position.X + (float)(target.width / 2), target.position.Y + (float)(target.height / 2), 0f, 0f, projectileID, 0, 0f, target.whoAmi, 0f, 0f);
+            Projectile.NewProjectile(target.position.X + (float)(target.width / 2), target.position.Y + (float)(target.height / 2), 0f, 0f, ProjectileID, 0, 0f, target.whoAmi, 0f, 0f);
         }
     }
     public abstract class BuffEffect
     {
-        public abstract int typeID
+        public abstract int TypeID
         {
             get;
         } 
-        public abstract void apply(ref int buffTime, Player target);
+        public abstract void Apply(ref int buffTime, Player target);
     }
     public class Buff : EntityBase
     {
@@ -42,14 +42,13 @@ namespace Terraria.Terraria.Entities
         private static Dictionary<int, BuffEffect> buffs = new Dictionary<int, BuffEffect>();
         public static void Register(BuffEffect buff)
         {
-            buffs.Add(buff.typeID, buff);
+            buffs.Add(buff.TypeID, buff);
         }
 
         public static BuffEffect Get(int type)
         {
-            BuffEffect temp = null;
-            buffs.TryGetValue(type, out temp);
-            return temp == null ? (buffs[-1]) : (temp);
+            buffs.TryGetValue(type, out BuffEffect temp);
+            return temp ?? buffs[-1];
         }
 
         //Inst Stuff
@@ -58,7 +57,7 @@ namespace Terraria.Terraria.Entities
 
         public override void save(System.IO.BinaryWriter Data)
         {
-            Data.Write(type.typeID);
+            Data.Write(type.TypeID);
             Data.Write(time);
         }
 
@@ -90,22 +89,22 @@ namespace Terraria.Terraria.Entities
 
     class NullBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return -1; }
         }
-        public override void apply(ref int buffTime, Player target){}
+        public override void Apply(ref int buffTime, Player target){}
     }
 
     class FireImmunityBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 1; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.lavaImmune = true;
             target.fireWalk = true;
@@ -116,12 +115,12 @@ namespace Terraria.Terraria.Entities
     class IncreaseLifeRegenBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 2; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.lifeRegen += 2;
         }
@@ -129,12 +128,12 @@ namespace Terraria.Terraria.Entities
 
     class IncreaseMoveSpeedBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 3; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.moveSpeed += 0.25f;
         }
@@ -143,12 +142,12 @@ namespace Terraria.Terraria.Entities
 
     class GillsBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 4; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.gills = true;
         }
@@ -156,12 +155,12 @@ namespace Terraria.Terraria.Entities
 
     class IncreaseDefenseBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 5; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.statDefense += 8;
         }
@@ -169,12 +168,12 @@ namespace Terraria.Terraria.Entities
 
     class ManaRegenBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 6; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.manaRegenBuff = true;
         }
@@ -183,12 +182,12 @@ namespace Terraria.Terraria.Entities
     class IncreaseMagicDamageBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 7; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.magicDamage += 0.2f;
         }
@@ -196,12 +195,12 @@ namespace Terraria.Terraria.Entities
 
     class SlowFallBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 8; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.slowFall = true;
         }
@@ -210,12 +209,12 @@ namespace Terraria.Terraria.Entities
     class FindTreasureBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 9; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.findTreasure = true;
         }
@@ -224,12 +223,12 @@ namespace Terraria.Terraria.Entities
     class InvisibilityBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 10; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.invis = true;
         }
@@ -238,12 +237,12 @@ namespace Terraria.Terraria.Entities
     class AddLightBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 11; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             Lighting.addLight((int)(target.position.X + (float)(target.width / 2)) / 16, (int)(target.position.Y + (float)(target.height / 2)) / 16, 0.8f, 0.95f, 1f);
         }
@@ -251,12 +250,12 @@ namespace Terraria.Terraria.Entities
 
     class NightVisionBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 12; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.nightVision = true;
         }
@@ -265,12 +264,12 @@ namespace Terraria.Terraria.Entities
     class EnemySpawnsBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 13; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.enemySpawns = true;
         }
@@ -279,12 +278,12 @@ namespace Terraria.Terraria.Entities
     class ThornsBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 14; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.thorns = true;
         }
@@ -293,12 +292,12 @@ namespace Terraria.Terraria.Entities
     class WaterWalkBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 15; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.waterWalk = true;
         }
@@ -307,12 +306,12 @@ namespace Terraria.Terraria.Entities
     class ArcheryBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 16; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.archery = true;
         }
@@ -321,12 +320,12 @@ namespace Terraria.Terraria.Entities
     class DetectCreaturesBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 17; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.detectCreature = true;
         }
@@ -335,12 +334,12 @@ namespace Terraria.Terraria.Entities
     class GravityBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 18; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.gravControl = true;
         }
@@ -348,19 +347,19 @@ namespace Terraria.Terraria.Entities
     
     class LightOrbBuffEffect : BuffEffectFollower
     {
-        public override int typeID{ get { return 19; } }
-        protected override void applyOverridable(Player target) { projectileID = 18; target.lightOrb = true; }
+        public override int TypeID{ get { return 19; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 18; target.lightOrb = true; }
     }
    
     class PoisonedBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 20; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.poisoned = true;
         }
@@ -369,12 +368,12 @@ namespace Terraria.Terraria.Entities
     class UsePotionDelayBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 21; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.potionDelay = buffTime;
         }
@@ -383,12 +382,12 @@ namespace Terraria.Terraria.Entities
     class BlindBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 22; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.blind = true;
         }
@@ -397,12 +396,12 @@ namespace Terraria.Terraria.Entities
     class NoItemBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 23; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.noItems = true;
         }
@@ -411,12 +410,12 @@ namespace Terraria.Terraria.Entities
     class FiredBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 24; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.onFire = true;
         }
@@ -425,12 +424,12 @@ namespace Terraria.Terraria.Entities
     class AleBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 25; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.statDefense -= 4;
             target.meleeCrit += 2;
@@ -442,12 +441,12 @@ namespace Terraria.Terraria.Entities
     class WellFedBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 26; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.statDefense += 2;
             target.meleeCrit += 2;
@@ -465,41 +464,41 @@ namespace Terraria.Terraria.Entities
 
     class BlueFairyBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 27; } }
-        public override int projectileID { get { return 72; } }
-        protected override void applyOverridable(Player target) { target.blueFairy = true; }
+        public override int TypeID { get { return 27; } }
+        public override int ProjectileID { get { return 72; } }
+        protected override void ApplyOverridable(Player target) { target.blueFairy = true; }
         
     }
 
     class RedFairyBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 101; } }
-        protected override void applyOverridable(Player target) { 
+        public override int TypeID { get { return 101; } }
+        protected override void ApplyOverridable(Player target) { 
             target.redFairy = true;
-            projectileID = 86;
-            if (target.head == 45 && target.body == 26 && target.legs == 25) projectileID = 72;
+            ProjectileID = 86;
+            if (target.head == 45 && target.body == 26 && target.legs == 25) ProjectileID = 72;
         }
     }
 
     class GreenFairyBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 102; } }
-        protected override void applyOverridable(Player target)
+        public override int TypeID { get { return 102; } }
+        protected override void ApplyOverridable(Player target)
         {
             target.greenFairy = true;
-            projectileID = 87;
-            if (target.head == 45 && target.body == 26 && target.legs == 25) projectileID = 72;
+            ProjectileID = 87;
+            if (target.head == 45 && target.body == 26 && target.legs == 25) ProjectileID = 72;
         }
     }
 
     class WereWolfBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 28; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             if (!Main.dayTime && target.wolfAcc && !target.merman)
             {
@@ -518,12 +517,12 @@ namespace Terraria.Terraria.Entities
     class ClairvoyanceBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 29; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.magicCrit += 2;
             target.magicDamage += 0.05f;
@@ -535,12 +534,12 @@ namespace Terraria.Terraria.Entities
     class BleedingBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 30; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.bleed = true;
         }
@@ -549,12 +548,12 @@ namespace Terraria.Terraria.Entities
     class ConfusedBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 31; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.confused = true;
         }
@@ -563,12 +562,12 @@ namespace Terraria.Terraria.Entities
     class SlowBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 32; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.slow = true;
         }
@@ -577,12 +576,12 @@ namespace Terraria.Terraria.Entities
     class WeakBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 33; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.meleeDamage -= 0.051f;
             target.meleeSpeed -= 0.051f;
@@ -594,23 +593,23 @@ namespace Terraria.Terraria.Entities
     class MermanBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 34; }
         }
 
-        public override void apply(ref int buffTime, Player target){ }
+        public override void Apply(ref int buffTime, Player target){ }
     }
 
     class SilenceBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 35; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.silence = true;
         }
@@ -619,12 +618,12 @@ namespace Terraria.Terraria.Entities
     class BrokenArmorBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 36; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.brokenArmor = true;
         }
@@ -633,12 +632,12 @@ namespace Terraria.Terraria.Entities
     class GrossBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 37; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             if (Main.wof >= 0 && Main.npc[Main.wof].type == 113)
             {
@@ -652,12 +651,12 @@ namespace Terraria.Terraria.Entities
     class TongueBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 38; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             buffTime = 10;
             target.tongued = true;
@@ -666,12 +665,12 @@ namespace Terraria.Terraria.Entities
 
     class HardFiredBuffEffect : BuffEffect
     {
-        public override int typeID
+        public override int TypeID
         {
             get { return 39; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.onFire2 = true;
         }
@@ -679,25 +678,25 @@ namespace Terraria.Terraria.Entities
 
     class BunnyBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 40; } }
-        protected override void applyOverridable(Player target) { projectileID = 111; target.bunny = true; }
+        public override int TypeID { get { return 40; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 111; target.bunny = true; }
     }
 
     class PenguinBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 41; } }
-        protected override void applyOverridable(Player target) { projectileID = 112; target.penguin = true; }
+        public override int TypeID { get { return 41; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 112; target.penguin = true; }
     }
     
     class PaladinBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 43; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.paladinBuff = true;
         }
@@ -706,12 +705,12 @@ namespace Terraria.Terraria.Entities
     class FrostBurnBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 44; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.onFrostBurn = true;
         }
@@ -719,31 +718,31 @@ namespace Terraria.Terraria.Entities
 
     class EaterBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 45; } }
-        protected override void applyOverridable(Player target) { projectileID = 175; target.eater = true; }
+        public override int TypeID { get { return 45; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 175; target.eater = true; }
     }
 
     class ChillBuffEffect : BuffEffect
     {
-        public override int typeID {  get { return 46; } }
-        public override void apply(ref int buffTime, Player target) { target.chilled = true; }
+        public override int TypeID {  get { return 46; } }
+        public override void Apply(ref int buffTime, Player target) { target.chilled = true; }
     }
 
     class FrozenBuffEffect : BuffEffect
     {
-        public override int typeID {  get { return 47; } }
-        public override void apply(ref int buffTime, Player target) { target.frozen = true; }
+        public override int TypeID {  get { return 47; } }
+        public override void Apply(ref int buffTime, Player target) { target.frozen = true; }
     }
 
     class IchorBuffEffect : BuffEffect
     {
 
-        public override int typeID
+        public override int TypeID
         {
             get { return 48; }
         }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             target.ichor = true;
             target.statDefense -= 20;
@@ -753,9 +752,9 @@ namespace Terraria.Terraria.Entities
     class PygmyBuffEffect : BuffEffect
     {
 
-        public override int typeID { get { return 49; } }
+        public override int TypeID { get { return 49; } }
 
-        public override void apply(ref int buffTime, Player target)
+        public override void Apply(ref int buffTime, Player target)
         {
             if (Main.myPlayer == target.whoAmi)
             {
@@ -778,44 +777,44 @@ namespace Terraria.Terraria.Entities
 
     class SkeletronBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 50; } }
-        protected override void applyOverridable(Player target) { projectileID = 197; target.skeletron = true; }
+        public override int TypeID { get { return 50; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 197; target.skeletron = true; }
     }
 
     class BabyHornetBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 51; } }
-        protected override void applyOverridable(Player target) { projectileID = 198; target.hornet = true; }
+        public override int TypeID { get { return 51; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 198; target.hornet = true; }
     }
 
     class SikiSpiritBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 52; } }
-        protected override void applyOverridable(Player target) { projectileID = 199; target.tiki = true; }
+        public override int TypeID { get { return 52; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 199; target.tiki = true; }
     }
 
     class LizardBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 53; } }
-        protected override void applyOverridable(Player target) { projectileID = 200; target.lizard = true; }
+        public override int TypeID { get { return 53; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 200; target.lizard = true; }
     }
 
     class ParrotBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 54; } }
-        protected override void applyOverridable(Player target) { projectileID = 208; target.parrot = true; }
+        public override int TypeID { get { return 54; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 208; target.parrot = true; }
     }
 
     class TruffleBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 55; } }
-        protected override void applyOverridable(Player target) { projectileID = 209; target.truffle = true; }
+        public override int TypeID { get { return 55; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 209; target.truffle = true; }
     }
 
     class SaplingBuffEffect : BuffEffectFollower
     {
-        public override int typeID { get { return 56; } }
-        protected override void applyOverridable(Player target) { projectileID = 210; target.sapling = true; }
+        public override int TypeID { get { return 56; } }
+        protected override void ApplyOverridable(Player target) { ProjectileID = 210; target.sapling = true; }
     }
 
 

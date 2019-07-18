@@ -3486,7 +3486,7 @@ namespace Terraria
 			WorldGen.ironBar = 22;
 			WorldGen.silverBar = 21;
 			WorldGen.goldBar = 19;
-			if (WorldGen.genRand.Next(2) == 0)
+			/*if (WorldGen.genRand.Next(2) == 0)
 			{
 				type = 166;
 				WorldGen.copperBar = 703;
@@ -3505,13 +3505,14 @@ namespace Terraria
 			{
 				type4 = 169;
 				WorldGen.goldBar = 706;
-			}
+			}*/
 			WorldGen.randomBackgrounds();
-			if (WorldGen.genRand.Next(2) == 0)
+            WorldGen.crimson = false;
+            /*if (WorldGen.genRand.Next(2) == 0)
 			{
 				WorldGen.crimson = true;
-			}
-			ushort num = (ushort)WorldGen.genRand.Next(5);
+			}*/
+            ushort num = (ushort)WorldGen.genRand.Next(5);
 			if (num == 0)
 			{
 				num = 119;

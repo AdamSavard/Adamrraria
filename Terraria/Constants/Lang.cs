@@ -26538,8 +26538,8 @@ namespace Terraria
 				Lang.menu[9] = "Load failed!";
 				Lang.menu[10] = "Load Backup";
 				Lang.menu[11] = "No backup found";
-				Lang.menu[12] = "Single Player";
-				Lang.menu[13] = "Multiplayer";
+				Lang.menu[12] = "Just Do It";
+				Lang.menu[13] = "Multiplayer (Not Working)";
 				Lang.menu[14] = "Settings";
 				Lang.menu[15] = "Exit";
 				Lang.menu[16] = "Create Character";
@@ -26548,8 +26548,8 @@ namespace Terraria
 				Lang.menu[19] = "Eyes";
 				Lang.menu[20] = "Skin";
 				Lang.menu[21] = "Clothes";
-				Lang.menu[22] = "Male";
-				Lang.menu[23] = "Female";
+				Lang.menu[22] = "Butch";
+				Lang.menu[23] = "Femme";
 				Lang.menu[24] = "Hardcore";
 				Lang.menu[25] = "Mediumcore";
 				Lang.menu[26] = "Softcore";
