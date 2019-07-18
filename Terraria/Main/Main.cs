@@ -3135,7 +3135,8 @@ namespace Terraria
 			Main.fontCombatText[0] = base.Content.Load<SpriteFont>("Fonts" + Path.DirectorySeparatorChar + "Combat_Text");
 			Main.fontCombatText[1] = base.Content.Load<SpriteFont>("Fonts" + Path.DirectorySeparatorChar + "Combat_Crit");
 		}
-		protected override void UnloadContent()
+
+        protected override void UnloadContent()
 		{
 		}
 		
@@ -24903,7 +24904,7 @@ namespace Terraria
 				{
 					num93 = 2;
 				}
-				string text9 = "Copyright © 2014 Re-Logic";
+				string text9 = "Adam's Awesome Terraria Mod of Doom";
 				Vector2 origin2 = Main.fontMouseText.MeasureString(text9);
 				origin2.X *= 0.5f;
 				origin2.Y *= 0.5f;
@@ -24938,10 +24939,11 @@ namespace Terraria
 				{
 					num96 = 2;
 				}
-				Vector2 origin3 = Main.fontMouseText.MeasureString(Main.versionNumber);
+                string versionString = "v1.3.2.1.Adam.Is.Awesome";
+				Vector2 origin3 = Main.fontMouseText.MeasureString(versionString);
 				origin3.X *= 0.5f;
 				origin3.Y *= 0.5f;
-				Main.spriteBatch.DrawString(Main.fontMouseText, Main.versionNumber, new Vector2(origin3.X + (float)num95 + 10f, (float)Main.screenHeight - origin3.Y + (float)num96 - 2f), color11, 0f, origin3, 1f, SpriteEffects.None, 0f);
+				Main.spriteBatch.DrawString(Main.fontMouseText, versionString, new Vector2(origin3.X + (float)num95 + 10f, (float)Main.screenHeight - origin3.Y + (float)num96 - 2f), color11, 0f, origin3, 1f, SpriteEffects.None, 0f);
 			}
 			Main.spriteBatch.Draw(Main.cursorTexture, new Vector2((float)(Main.mouseX + 1), (float)(Main.mouseY + 1)), new Rectangle?(new Rectangle(0, 0, Main.cursorTexture.Width, Main.cursorTexture.Height)), new Color((int)((float)Main.cursorColor.R * 0.2f), (int)((float)Main.cursorColor.G * 0.2f), (int)((float)Main.cursorColor.B * 0.2f), (int)((float)Main.cursorColor.A * 0.5f)), 0f, default(Vector2), Main.cursorScale * 1.1f, SpriteEffects.None, 0f);
 			Main.spriteBatch.Draw(Main.cursorTexture, new Vector2((float)Main.mouseX, (float)Main.mouseY), new Rectangle?(new Rectangle(0, 0, Main.cursorTexture.Width, Main.cursorTexture.Height)), Main.cursorColor, 0f, default(Vector2), Main.cursorScale, SpriteEffects.None, 0f);

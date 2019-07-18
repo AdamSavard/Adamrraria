@@ -1,14 +1,4 @@
-Terraria Refractoring
+Refactoring and modifying Terraria from decompiled source code
 ========
 
-### Decompiled source code with source code refractoring
-## I use a fork of https://github.com/dptug/Terraria
-## TODO:
-* ProjectileType Enum
-* Items ID Enum 100% complete
-* NPC ID Enum
-* Packets Const 100% Complete (or Enum)
-* Buffs Static Registry 100% complete
-* All entities (player, color...)
-* Main class division
-* Packet Edit : Get data from server, but without local stockage.
+### Using https://github.com/NoviaDroid/TerrariaRefractoring_1.3.2.1 as my starting point. I will be making many changes to the game to suit my needs.
