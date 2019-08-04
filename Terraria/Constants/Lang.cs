@@ -6,7 +6,7 @@ namespace Terraria
 	{
 		public static int lang = 0;
 		public static string[] misc = new string[36];
-		public static string[] menu = new string[120];
+		public static string[] menu = new string[121];
 		public static string[] gen = new string[74];
 		public static string[] inter = new string[64];
 		public static string[] tip = new string[56];
@@ -26646,7 +26646,8 @@ namespace Terraria
 				Lang.menu[117] = "Off";
 				Lang.menu[118] = "Close Menu";
 				Lang.menu[119] = "Ambient";
-				Lang.gen[0] = "Generating world terrain:";
+                Lang.menu[120] = "Finish Editing";
+                Lang.gen[0] = "Generating world terrain:";
 				Lang.gen[1] = "Adding sand...";
 				Lang.gen[2] = "Generating hills...";
 				Lang.gen[3] = "Puttin dirt behind dirt:";

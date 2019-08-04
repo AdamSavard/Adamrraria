@@ -117,6 +117,8 @@ namespace Terraria
 		private float screenOff;
 		private float scAdj;
 		private float cTop;
+
+        private bool editingCharacter = false;
 		
 		protected void OpenRecent()
 		{
@@ -21626,35 +21628,24 @@ namespace Terraria
 			}
 			if (Main.menuMode == 1212)
 			{
-				if (this.focusMenu == 2)
-				{
-					array9[0] = "Wählen Sie die Sprache";
-				}
-				else
-				{
-					if (this.focusMenu == 3)
-					{
-						array9[0] = "Selezionare la lingua";
-					}
-					else
-					{
-						if (this.focusMenu == 4)
-						{
-							array9[0] = "Sélectionnez la langue";
-						}
-						else
-						{
-							if (this.focusMenu == 5)
-							{
-								array9[0] = "Seleccione el idioma";
-							}
-							else
-							{
-								array9[0] = "Select language";
-							}
-						}
-					}
-				}
+                switch (this.focusMenu)
+                {
+                    case 2:
+                        array9[0] = "Wählen Sie die Sprache";
+                        break;
+                    case 3:
+                        array9[0] = "Selezionare la lingua";
+                        break;
+                    case 4:
+                        array9[0] = "Sélectionnez la langue";
+                        break;
+                    case 5:
+                        array9[0] = "Seleccione el idioma";
+                        break;
+                    default:
+                        array9[0] = "Select language";
+                        break;
+                }
 				num3 = 50;
 				num = 200;
 				array4[1] = 25;
@@ -22104,13 +22095,13 @@ namespace Terraria
 													}
 													else
 													{
-														if (Main.menuMode == 1)
+														if (Main.menuMode == 1) // player list, create, exit to main menu
 														{
 															Main.ServerSideCharacter = false;
 															Main.myPlayer = 0;
 															num = 180;
 															num3 = 40;
-															num4 = 10;
+															num4 = 11;
 															array4[7] += 10;
 															array4[8] += 10;
 															array4[9] += 10;
@@ -22118,8 +22109,8 @@ namespace Terraria
 															{
 																array7[l] = 0.8f;
 															}
-															array9[7] = Lang.menu[16];
-															array9[8] = Lang.menu[17];
+															array9[7] = Lang.menu[16]; // CREATE PLAYER
+                                                            array9[8] = Lang.inter[48]; // EDIT
 															if (Main.numLoadPlayers >= Main.maxLoadPlayer)
 															{
 																array2[7] = true;
@@ -22131,10 +22122,13 @@ namespace Terraria
 																{
 																	array2[8] = true;
 																	array9[8] = "";
-																}
+                                                                    array2[9] = true;
+                                                                    array9[9] = "";
+                                                                }
 															}
-															array9[9] = Lang.menu[5];
-															for (int m = 0; m < 7; m++)
+															array9[9] = Lang.menu[17]; // DELETE
+                                                            array9[10] = Lang.menu[5]; // EXIT
+                                                            for (int m = 0; m < 7; m++)
 															{
 																if (m + Main.menuSkip < Main.numLoadPlayers)
 																{
@@ -22190,7 +22184,8 @@ namespace Terraria
 															array11[7] = true;
 															array11[8] = true;
 															array11[9] = true;
-															if (this.focusMenu >= 0 && this.focusMenu < Main.numLoadPlayers && !array11[this.focusMenu])
+                                                            array11[10] = true;
+                                                            if (this.focusMenu >= 0 && this.focusMenu < Main.numLoadPlayers && !array11[this.focusMenu])
 															{
 																num6 = this.focusMenu + Main.menuSkip;
 																Vector2 vector = Main.fontDeathText.MeasureString(array9[num6 - Main.menuSkip]);
@@ -22219,7 +22214,7 @@ namespace Terraria
 																}
 																else
 																{
-																	if (this.selectedMenu == 9)
+																	if (this.selectedMenu == 10) // Exit (From Player List)
 																	{
 																		Main.autoJoin = false;
 																		Main.autoPass = false;
@@ -22237,7 +22232,7 @@ namespace Terraria
 																	}
 																	else
 																	{
-																		if (this.selectedMenu == 7)
+																		if (this.selectedMenu == 7) // Create Character
 																		{
 																			Main.loadPlayer[Main.numLoadPlayers] = new Player();
 																			Main.loadPlayer[Main.numLoadPlayers].inventory[0].SetDefaults("Copper Shortsword");
@@ -22251,67 +22246,75 @@ namespace Terraria
 																		}
 																		else
 																		{
-																			if (this.selectedMenu == 8)
-																			{
-																				Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																				Main.menuMode = 4;
-																			}
-																			else
-																			{
-																				if (this.selectedMenu >= 0 && Main.loadPlayer[this.selectedMenu + Main.menuSkip].loadStatus == 0)
-																				{
-																					if (Main.menuMultiplayer)
-																					{
-																						Main.ServerSideCharacter = false;
-																						this.selectedPlayer = this.selectedMenu + Main.menuSkip;
-																						Main.player[Main.myPlayer] = (Player)Main.loadPlayer[this.selectedPlayer].Clone();
-																						Main.playerPathName = Main.loadPlayerPath[this.selectedPlayer];
-																						Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																						if (Main.autoJoin)
-																						{
-																							if (Netplay.SetIP(Main.getIP))
-																							{
-																								Main.menuMode = 10;
-																								Netplay.StartClient();
-																							}
-																							else
-																							{
-																								if (Netplay.SetIP2(Main.getIP))
-																								{
-																									Main.menuMode = 10;
-																									Netplay.StartClient();
-																								}
-																							}
-																							Main.autoJoin = false;
-																						}
-																						else
-																						{
-																							if (Main.menuServer)
-																							{
-																								Main.LoadWorlds();
-																								Main.menuMode = 6;
-																							}
-																							else
-																							{
-																								Main.menuMode = 13;
-																								Main.clrInput();
-																							}
-																						}
-																					}
-																					else
-																					{
-																						Main.ServerSideCharacter = false;
-																						Main.myPlayer = 0;
-																						this.selectedPlayer = this.selectedMenu + Main.menuSkip;
-																						Main.player[Main.myPlayer] = (Player)Main.loadPlayer[this.selectedPlayer].Clone();
-																						Main.player[Main.myPlayer].position = Vector2.Zero;
-																						Main.playerPathName = Main.loadPlayerPath[this.selectedPlayer];
-																						Main.LoadWorlds();
-																						Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																						Main.menuMode = 6;
-																					}
-																				}
-																			}
+                                                                            if (this.selectedMenu == 8) // Edit
+                                                                            {
+                                                                                Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                                Main.menuMode = 32; // TODO
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (this.selectedMenu == 9) // Delete
+                                                                                {
+                                                                                    Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                                    Main.menuMode = 4;
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (this.selectedMenu >= 0 && Main.loadPlayer[this.selectedMenu + Main.menuSkip].loadStatus == 0)
+                                                                                    {
+                                                                                        if (Main.menuMultiplayer)
+                                                                                        {
+                                                                                            Main.ServerSideCharacter = false;
+                                                                                            this.selectedPlayer = this.selectedMenu + Main.menuSkip;
+                                                                                            Main.player[Main.myPlayer] = (Player)Main.loadPlayer[this.selectedPlayer].Clone();
+                                                                                            Main.playerPathName = Main.loadPlayerPath[this.selectedPlayer];
+                                                                                            Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                                            if (Main.autoJoin)
+                                                                                            {
+                                                                                                if (Netplay.SetIP(Main.getIP))
+                                                                                                {
+                                                                                                    Main.menuMode = 10;
+                                                                                                    Netplay.StartClient();
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    if (Netplay.SetIP2(Main.getIP))
+                                                                                                    {
+                                                                                                        Main.menuMode = 10;
+                                                                                                        Netplay.StartClient();
+                                                                                                    }
+                                                                                                }
+                                                                                                Main.autoJoin = false;
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                if (Main.menuServer)
+                                                                                                {
+                                                                                                    Main.LoadWorlds();
+                                                                                                    Main.menuMode = 6;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Main.menuMode = 13;
+                                                                                                    Main.clrInput();
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            Main.ServerSideCharacter = false;
+                                                                                            Main.myPlayer = 0;
+                                                                                            this.selectedPlayer = this.selectedMenu + Main.menuSkip;
+                                                                                            Main.player[Main.myPlayer] = (Player)Main.loadPlayer[this.selectedPlayer].Clone();
+                                                                                            Main.player[Main.myPlayer].position = Vector2.Zero;
+                                                                                            Main.playerPathName = Main.loadPlayerPath[this.selectedPlayer];
+                                                                                            Main.LoadWorlds();
+                                                                                            Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                                            Main.menuMode = 6;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
 																		}
 																	}
 																}
@@ -22319,151 +22322,173 @@ namespace Terraria
 														}
 														else
 														{
-															if (Main.menuMode == 2)
-															{
-																if (this.selectedMenu == 0)
-																{
-																	Main.menuMode = 17;
-																	Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																	Main.selColor = Main.loadPlayer[Main.numLoadPlayers].hairColor;
-																}
-																if (this.selectedMenu == 1)
-																{
-																	Main.menuMode = 18;
-																	Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																	Main.selColor = Main.loadPlayer[Main.numLoadPlayers].eyeColor;
-																}
-																if (this.selectedMenu == 2)
-																{
-																	Main.menuMode = 19;
-																	Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																	Main.selColor = Main.loadPlayer[Main.numLoadPlayers].skinColor;
-																}
-																if (this.selectedMenu == 3)
-																{
-																	Main.menuMode = 20;
-																	Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																}
-																array9[0] = Lang.menu[18];
-																array9[1] = Lang.menu[19];
-																array9[2] = Lang.menu[20];
-																array9[3] = Lang.menu[21];
-																num = 220;
-																for (int n = 0; n < 9; n++)
-																{
-																	if (n < 6)
-																	{
-																		array7[n] = 0.75f;
-																	}
-																	else
-																	{
-																		array7[n] = 0.9f;
-																	}
-																}
-																num3 = 38;
-																array4[6] = 6;
-																array4[7] = 12;
-																array4[8] = 18;
-																num6 = Main.numLoadPlayers;
-																num7 = Main.screenWidth / 2 - 16;
-																num8 = 176;
-																if (Main.loadPlayer[num6].male)
-																{
-																	array9[4] = Lang.menu[22];
-																}
-																else
-																{
-																	array9[4] = Lang.menu[23];
-																}
-																if (this.selectedMenu == 4)
-																{
-																	if (Main.loadPlayer[num6].male)
-																	{
-																		Main.PlaySound(SoundTypeID.FEMALE_HIT, -1, -1, 1);
-																		Main.loadPlayer[num6].male = false;
-																	}
-																	else
-																	{
-																		Main.PlaySound((SoundTypeID)1, -1, -1, 1);
-																		Main.loadPlayer[num6].male = true;
-																	}
-																}
-																if (Main.loadPlayer[num6].difficulty == 2)
-																{
-																	array9[5] = Lang.menu[24];
-																	array6[5] = Main.loadPlayer[num6].difficulty;
-																}
-																else
-																{
-																	if (Main.loadPlayer[num6].difficulty == 1)
-																	{
-																		array9[5] = Lang.menu[25];
-																		array6[5] = Main.loadPlayer[num6].difficulty;
-																	}
-																	else
-																	{
-																		array9[5] = Lang.menu[26];
-																	}
-																}
-																if (this.selectedMenu == 5)
-																{
-																	Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																	Main.menuMode = 222;
-																}
-																if (this.selectedMenu == 7)
-																{
-																	Main.PlaySound(SoundTypeID.MENU_TICK, -1, -1, 1);
-																	Main.loadPlayer[num6].hair = Main.rand.Next(51);
-																	Main.loadPlayer[num6].eyeColor = this.randColor();
-																	while ((int)(Main.loadPlayer[num6].eyeColor.R + Main.loadPlayer[num6].eyeColor.G + Main.loadPlayer[num6].eyeColor.B) > 300)
-																	{
-																		Main.loadPlayer[num6].eyeColor = this.randColor();
-																	}
-																	Main.loadPlayer[num6].hairColor = this.randColor();
-																	Main.loadPlayer[num6].pantsColor = this.randColor();
-																	Main.loadPlayer[num6].shirtColor = this.randColor();
-																	Main.loadPlayer[num6].shoeColor = this.randColor();
-																	Main.loadPlayer[num6].skinColor = this.randColor();
-																	float num10 = (float)Main.rand.Next(60, 120) * 0.01f;
-																	if (num10 > 1f)
-																	{
-																		num10 = 1f;
-																	}
-																	Main.loadPlayer[num6].skinColor.R = (byte)((float)Main.rand.Next(240, 255) * num10);
-																	Main.loadPlayer[num6].skinColor.G = (byte)((float)Main.rand.Next(110, 140) * num10);
-																	Main.loadPlayer[num6].skinColor.B = (byte)((float)Main.rand.Next(75, 110) * num10);
-																	Main.loadPlayer[num6].underShirtColor = this.randColor();
-																	int num11 = Main.loadPlayer[num6].hair + 1;
-																	if (num11 == 5 || num11 == 6 || num11 == 7 || num11 == 10 || num11 == 12 || num11 == 19 || num11 == 22 || num11 == 23 || num11 == 26 || num11 == 27 || num11 == 30 || num11 == 33)
-																	{
-																		Main.loadPlayer[num6].male = false;
-																	}
-																	else
-																	{
-																		Main.loadPlayer[num6].male = true;
-																	}
-																}
-																array9[7] = Lang.menu[27];
-																array9[6] = Lang.menu[28];
-																array9[8] = Lang.menu[5];
-																num4 = 9;
-																if (this.selectedMenu == 8)
-																{
-																	Main.PlaySound(SoundTypeID.MENU_CLOSE, -1, -1, 1);
-																	Main.menuMode = 1;
-																}
-																else
-																{
-																	if (this.selectedMenu == 6)
-																	{
-																		Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
-																		Main.loadPlayer[Main.numLoadPlayers].name = "";
-																		Main.menuMode = 3;
-																		Main.clrInput();
-																	}
-																}
-															}
-															else
+                                                            if (Main.menuMode == 2) // character creation menu
+                                                            {
+                                                                if (this.selectedMenu == 0)
+                                                                {
+                                                                    Main.menuMode = 17;
+                                                                    Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                    Main.selColor = Main.loadPlayer[Main.numLoadPlayers].hairColor;
+                                                                }
+                                                                if (this.selectedMenu == 1)
+                                                                {
+                                                                    Main.menuMode = 18;
+                                                                    Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                    Main.selColor = Main.loadPlayer[Main.numLoadPlayers].eyeColor;
+                                                                }
+                                                                if (this.selectedMenu == 2)
+                                                                {
+                                                                    Main.menuMode = 19;
+                                                                    Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                    Main.selColor = Main.loadPlayer[Main.numLoadPlayers].skinColor;
+                                                                }
+                                                                if (this.selectedMenu == 3)
+                                                                {
+                                                                    Main.menuMode = 20;
+                                                                    Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                }
+                                                                array9[0] = Lang.menu[18];
+                                                                array9[1] = Lang.menu[19];
+                                                                array9[2] = Lang.menu[20];
+                                                                array9[3] = Lang.menu[21];
+                                                                num = 220;
+                                                                for (int n = 0; n < 9; n++)
+                                                                {
+                                                                    if (n < 6)
+                                                                    {
+                                                                        array7[n] = 0.75f;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        array7[n] = 0.9f;
+                                                                    }
+                                                                }
+                                                                num3 = 38;
+                                                                array4[6] = 6;
+                                                                array4[7] = 12;
+                                                                array4[8] = 18;
+                                                                num6 = Main.numLoadPlayers;
+                                                                num7 = Main.screenWidth / 2 - 16;
+                                                                num8 = 176;
+                                                                if (Main.loadPlayer[num6].male)
+                                                                {
+                                                                    array9[4] = Lang.menu[22];
+                                                                }
+                                                                else
+                                                                {
+                                                                    array9[4] = Lang.menu[23];
+                                                                }
+                                                                if (this.selectedMenu == 4)
+                                                                {
+                                                                    if (Main.loadPlayer[num6].male)
+                                                                    {
+                                                                        Main.PlaySound(SoundTypeID.FEMALE_HIT, -1, -1, 1);
+                                                                        Main.loadPlayer[num6].male = false;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        Main.PlaySound((SoundTypeID)1, -1, -1, 1);
+                                                                        Main.loadPlayer[num6].male = true;
+                                                                    }
+                                                                }
+                                                                if (Main.loadPlayer[num6].difficulty == 2)
+                                                                {
+                                                                    array9[5] = Lang.menu[24];
+                                                                    array6[5] = Main.loadPlayer[num6].difficulty;
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (Main.loadPlayer[num6].difficulty == 1)
+                                                                    {
+                                                                        array9[5] = Lang.menu[25];
+                                                                        array6[5] = Main.loadPlayer[num6].difficulty;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        array9[5] = Lang.menu[26];
+                                                                    }
+                                                                }
+                                                                if (this.selectedMenu == 5)
+                                                                {
+                                                                    Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                    Main.menuMode = 222;
+                                                                }
+                                                                if (this.selectedMenu == 7)
+                                                                {
+                                                                    Main.PlaySound(SoundTypeID.MENU_TICK, -1, -1, 1);
+                                                                    Main.loadPlayer[num6].hair = Main.rand.Next(51);
+                                                                    Main.loadPlayer[num6].eyeColor = this.randColor();
+                                                                    while ((int)(Main.loadPlayer[num6].eyeColor.R + Main.loadPlayer[num6].eyeColor.G + Main.loadPlayer[num6].eyeColor.B) > 300)
+                                                                    {
+                                                                        Main.loadPlayer[num6].eyeColor = this.randColor();
+                                                                    }
+                                                                    Main.loadPlayer[num6].hairColor = this.randColor();
+                                                                    Main.loadPlayer[num6].pantsColor = this.randColor();
+                                                                    Main.loadPlayer[num6].shirtColor = this.randColor();
+                                                                    Main.loadPlayer[num6].shoeColor = this.randColor();
+                                                                    Main.loadPlayer[num6].skinColor = this.randColor();
+                                                                    float num10 = (float)Main.rand.Next(60, 120) * 0.01f;
+                                                                    if (num10 > 1f)
+                                                                    {
+                                                                        num10 = 1f;
+                                                                    }
+                                                                    Main.loadPlayer[num6].skinColor.R = (byte)((float)Main.rand.Next(240, 255) * num10);
+                                                                    Main.loadPlayer[num6].skinColor.G = (byte)((float)Main.rand.Next(110, 140) * num10);
+                                                                    Main.loadPlayer[num6].skinColor.B = (byte)((float)Main.rand.Next(75, 110) * num10);
+                                                                    Main.loadPlayer[num6].underShirtColor = this.randColor();
+                                                                    int num11 = Main.loadPlayer[num6].hair + 1;
+                                                                    if (num11 == 5 || num11 == 6 || num11 == 7 || num11 == 10 || num11 == 12 || num11 == 19 || num11 == 22 || num11 == 23 || num11 == 26 || num11 == 27 || num11 == 30 || num11 == 33)
+                                                                    {
+                                                                        Main.loadPlayer[num6].male = false;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        Main.loadPlayer[num6].male = true;
+                                                                    }
+                                                                }
+                                                                array9[7] = Lang.menu[27];
+                                                                array9[6] = this.editingCharacter ? Lang.menu[120] : Lang.menu[28];
+                                                                array9[8] = Lang.menu[5];
+                                                                num4 = 9;
+                                                                if (this.selectedMenu == 8) // Back
+                                                                {
+                                                                    Main.PlaySound(SoundTypeID.MENU_CLOSE, -1, -1, 1);
+                                                                    this.editingCharacter = false;
+                                                                    Main.menuMode = 1;
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (this.selectedMenu == 6) // Finish
+                                                                    {
+                                                                        if (this.editingCharacter)
+                                                                        {
+                                                                            Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                            Main.loadPlayer[this.selectedPlayer].hair = Main.loadPlayer[Main.numLoadPlayers].hair;
+                                                                            Main.loadPlayer[this.selectedPlayer].eyeColor = Main.loadPlayer[Main.numLoadPlayers].eyeColor;
+                                                                            Main.loadPlayer[this.selectedPlayer].hairColor = Main.loadPlayer[Main.numLoadPlayers].hairColor;
+                                                                            Main.loadPlayer[this.selectedPlayer].pantsColor = Main.loadPlayer[Main.numLoadPlayers].pantsColor;
+                                                                            Main.loadPlayer[this.selectedPlayer].shirtColor = Main.loadPlayer[Main.numLoadPlayers].shirtColor;
+                                                                            Main.loadPlayer[this.selectedPlayer].shoeColor = Main.loadPlayer[Main.numLoadPlayers].shoeColor;
+                                                                            Main.loadPlayer[this.selectedPlayer].skinColor = Main.loadPlayer[Main.numLoadPlayers].skinColor;
+                                                                            Main.loadPlayer[this.selectedPlayer].underShirtColor = Main.loadPlayer[Main.numLoadPlayers].underShirtColor;
+                                                                            Main.loadPlayer[this.selectedPlayer].hair = Main.loadPlayer[Main.numLoadPlayers].hair;
+                                                                            Main.loadPlayer[this.selectedPlayer].male = Main.loadPlayer[Main.numLoadPlayers].male;
+                                                                            Main.loadPlayer[this.selectedPlayer].difficulty = Main.loadPlayer[Main.numLoadPlayers].difficulty;
+                                                                            this.editingCharacter = false;
+                                                                            Player.SavePlayer(Main.loadPlayer[this.selectedPlayer], Main.loadPlayerPath[this.selectedPlayer], true, false);
+                                                                            Main.menuMode = 32;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                            Main.loadPlayer[Main.numLoadPlayers].name = "";
+                                                                            Main.menuMode = 3;
+                                                                            Main.clrInput();
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
 															{
 																if (Main.menuMode == 222)
 																{
@@ -24144,6 +24169,122 @@ namespace Terraria
 																																													}
 																																												}
 																																											}
+                                                                                                                                                                            else
+                                                                                                                                                                            {
+                                                                                                                                                                                if (Main.menuMode == 32) // Choose Player to Edit
+                                                                                                                                                                                {
+                                                                                                                                                                                    num = 180;
+                                                                                                                                                                                    num3 = 40;
+                                                                                                                                                                                    num4 = 8;
+                                                                                                                                                                                    array9[7] = Lang.menu[5];
+                                                                                                                                                                                    array4[7] += 40;
+                                                                                                                                                                                    for (int num13 = 0; num13 < num4; num13++)
+                                                                                                                                                                                    {
+                                                                                                                                                                                        array7[num13] = 0.8f;
+                                                                                                                                                                                    }
+                                                                                                                                                                                    for (int num14 = 0; num14 < 7; num14++)
+                                                                                                                                                                                    {
+                                                                                                                                                                                        if (num14 + Main.menuSkip < Main.numLoadPlayers)
+                                                                                                                                                                                        {
+                                                                                                                                                                                            array9[num14] = Main.loadPlayer[num14 + Main.menuSkip].name;
+                                                                                                                                                                                            switch (Main.loadPlayer[num14 + Main.menuSkip].loadStatus)
+                                                                                                                                                                                            {
+                                                                                                                                                                                                case 0:
+                                                                                                                                                                                                    array6[num14] = Main.loadPlayer[num14 + Main.menuSkip].difficulty;
+                                                                                                                                                                                                    break;
+                                                                                                                                                                                                case 1:
+                                                                                                                                                                                                    array6[num14] = 3;
+                                                                                                                                                                                                    break;
+                                                                                                                                                                                                case 2:
+                                                                                                                                                                                                    array6[num14] = 6;
+                                                                                                                                                                                                    break;
+                                                                                                                                                                                                case 3:
+                                                                                                                                                                                                    array6[num14] = 4;
+                                                                                                                                                                                                    break;
+                                                                                                                                                                                                case 4:
+                                                                                                                                                                                                    array6[num14] = 5;
+                                                                                                                                                                                                    break;
+                                                                                                                                                                                                default:
+                                                                                                                                                                                                    array6[num14] = Main.loadPlayer[num14 + Main.menuSkip].difficulty;
+                                                                                                                                                                                                    break;
+                                                                                                                                                                                            }
+                                                                                                                                                                                        }
+                                                                                                                                                                                        else
+                                                                                                                                                                                        {
+                                                                                                                                                                                            array9[num14] = null;
+                                                                                                                                                                                        }
+                                                                                                                                                                                    }
+                                                                                                                                                                                    bool[] array12 = new bool[num4];
+                                                                                                                                                                                    array12[7] = true;
+                                                                                                                                                                                    if (Main.numLoadPlayers > 7 + Main.menuSkip)
+                                                                                                                                                                                    {
+                                                                                                                                                                                        this.menuWide[6] = true;
+                                                                                                                                                                                        array6[6] = 0;
+                                                                                                                                                                                        array12[6] = true;
+                                                                                                                                                                                        array9[6] = "▼";
+                                                                                                                                                                                        array7[6] = 0.6f;
+                                                                                                                                                                                        array4[6] += 8;
+                                                                                                                                                                                        array3[6] = true;
+                                                                                                                                                                                    }
+                                                                                                                                                                                    if (Main.menuSkip > 0)
+                                                                                                                                                                                    {
+                                                                                                                                                                                        this.menuWide[0] = true;
+                                                                                                                                                                                        array6[0] = 0;
+                                                                                                                                                                                        array12[0] = true;
+                                                                                                                                                                                        array9[0] = "▲";
+                                                                                                                                                                                        array7[0] = 0.6f;
+                                                                                                                                                                                        array4[0] += 8;
+                                                                                                                                                                                        array3[0] = true;
+                                                                                                                                                                                    }
+                                                                                                                                                                                    if (this.focusMenu >= 0 && this.focusMenu < Main.numLoadPlayers && !array12[this.focusMenu])
+                                                                                                                                                                                    {
+                                                                                                                                                                                        num6 = this.focusMenu + Main.menuSkip;
+                                                                                                                                                                                        Vector2 vector2 = Main.fontDeathText.MeasureString(array9[num6 - Main.menuSkip]);
+                                                                                                                                                                                        num7 = (int)((double)(Main.screenWidth / 2) + (double)vector2.X * 0.5 + 10.0);
+                                                                                                                                                                                        num8 = num + num3 * this.focusMenu + 4;
+                                                                                                                                                                                    }
+                                                                                                                                                                                    if (this.selectedMenu == 0 && Main.menuSkip > 0)
+                                                                                                                                                                                    {
+                                                                                                                                                                                        Main.PlaySound(SoundTypeID.MENU_TICK, -1, -1, 1);
+                                                                                                                                                                                        Main.menuSkip -= 5;
+                                                                                                                                                                                        if (Main.menuSkip < 0)
+                                                                                                                                                                                        {
+                                                                                                                                                                                            Main.menuSkip = 0;
+                                                                                                                                                                                        }
+                                                                                                                                                                                    }
+                                                                                                                                                                                    else
+                                                                                                                                                                                    {
+                                                                                                                                                                                        if (this.selectedMenu == 6 && Main.menuSkip < Main.numLoadPlayers - 7)
+                                                                                                                                                                                        {
+                                                                                                                                                                                            Main.PlaySound(SoundTypeID.MENU_TICK, -1, -1, 1);
+                                                                                                                                                                                            Main.menuSkip += 5;
+                                                                                                                                                                                            if (Main.menuSkip >= Main.numLoadPlayers - 7)
+                                                                                                                                                                                            {
+                                                                                                                                                                                                Main.menuSkip = Main.numLoadPlayers - 7;
+                                                                                                                                                                                            }
+                                                                                                                                                                                        }
+                                                                                                                                                                                        else
+                                                                                                                                                                                        {
+                                                                                                                                                                                            if (this.selectedMenu == 7)
+                                                                                                                                                                                            {
+                                                                                                                                                                                                Main.PlaySound(SoundTypeID.MENU_CLOSE, -1, -1, 1);
+                                                                                                                                                                                                Main.menuMode = 1;
+                                                                                                                                                                                            }
+                                                                                                                                                                                            else
+                                                                                                                                                                                            {
+                                                                                                                                                                                                if (this.selectedMenu >= 0)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    this.selectedPlayer = this.selectedMenu + Main.menuSkip;
+                                                                                                                                                                                                    Main.PlaySound(SoundTypeID.MENU_OPEN, -1, -1, 1);
+                                                                                                                                                                                                    Main.loadPlayer[Main.numLoadPlayers] = (Player)Main.loadPlayer[this.selectedPlayer].Clone();
+                                                                                                                                                                                                    this.editingCharacter = true;
+                                                                                                                                                                                                    Main.menuMode = 2;
+                                                                                                                                                                                                }
+                                                                                                                                                                                            }
+                                                                                                                                                                                        }
+                                                                                                                                                                                    }
+                                                                                                                                                                                }
+                                                                                                                                                                            }
 																																										}
 																																									}
 																																								}
