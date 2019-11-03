@@ -17059,7 +17059,7 @@ namespace Terraria
 							Main.toolTip = Main.recipe[Main.availableRecipe[Main.focusRecipe]].requiredItem[num88].Clone();
 							if (Main.recipe[Main.availableRecipe[Main.focusRecipe]].anyIronBar && Main.recipe[Main.availableRecipe[Main.focusRecipe]].requiredItem[num88].type == 22)
 							{
-								Main.toolTip.name = Main.itemName[22] + " or " + Main.itemName[704];
+                                Main.toolTip.name = Main.itemName[22];// + " or " + Main.itemName[704];
 							}
 							else
 							{
@@ -25080,7 +25080,7 @@ namespace Terraria
 				{
 					num96 = 2;
 				}
-                string versionString = "v1.3.2.1.Adam.Is.Awesome";
+                string versionString = "v1.2.3.1.Adam.Is.Awesome";
 				Vector2 origin3 = Main.fontMouseText.MeasureString(versionString);
 				origin3.X *= 0.5f;
 				origin3.Y *= 0.5f;
