@@ -14810,10 +14810,11 @@ namespace Terraria
 				}
 				NetMessage.SendData(44, -1, -1, deathText, this.whoAmi, (float)hitDirection, (float)((int)dmg), (float)num8, 0);
 			}
-			if (!pvp && this.whoAmi == Main.myPlayer && this.difficulty == 0)
+            // softcore can drop no coins
+			/*if (!pvp && this.whoAmi == Main.myPlayer && this.difficulty == 0)
 			{
 				this.DropCoins();
-			}
+			}*/
 			if (this.whoAmi == Main.myPlayer)
 			{
 				try
@@ -15326,6 +15327,7 @@ namespace Terraria
 					{
 						Main.mouseItem = this.inventory[this.selectedItem];
 					}
+					// using the extractinator on silt
 					Main.PlaySound(SoundTypeID.GRAB, -1, -1, 1);
 					int num34 = 1;
 					int num35;
@@ -15333,7 +15335,7 @@ namespace Terraria
 					{
 						if (Main.rand.Next(10000) == 0)
 						{
-							num35 = 74;
+							num35 = 74; // platinum coin
 							if (Main.rand.Next(12) == 0)
 							{
 								num34 += Main.rand.Next(0, 3);
@@ -15359,7 +15361,7 @@ namespace Terraria
 						{
 							if (Main.rand.Next(800) == 0)
 							{
-								num35 = 73;
+								num35 = 73; // gold coin
 								if (Main.rand.Next(6) == 0)
 								{
 									num34 += Main.rand.Next(1, 21);
@@ -15385,7 +15387,7 @@ namespace Terraria
 							{
 								if (Main.rand.Next(60) == 0)
 								{
-									num35 = 72;
+									num35 = 72; // silver coin
 									if (Main.rand.Next(4) == 0)
 									{
 										num34 += Main.rand.Next(5, 26);
@@ -15405,7 +15407,7 @@ namespace Terraria
 								}
 								else
 								{
-									num35 = 71;
+									num35 = 71; // copper coin
 									if (Main.rand.Next(3) == 0)
 									{
 										num34 += Main.rand.Next(10, 26);
@@ -15430,7 +15432,7 @@ namespace Terraria
 					{
 						if (Main.rand.Next(5000) == 0)
 						{
-							num35 = 1242;
+							num35 = 1242; // amber mosquito
 						}
 						else
 						{
@@ -15451,13 +15453,13 @@ namespace Terraria
 									{
 										if (num35 == 2)
 										{
-											num35 = 177;
+											num35 = 177; // sapphire
 										}
 										else
 										{
 											if (num35 == 3)
 											{
-												num35 = 179;
+												num35 = 179; // emerald
 											}
 											else
 											{
@@ -15498,7 +15500,7 @@ namespace Terraria
 							{
 								if (Main.rand.Next(50) == 0)
 								{
-									num35 = 999;
+									num35 = 999; // Amber
 									if (Main.rand.Next(20) == 0)
 									{
 										num34 += Main.rand.Next(0, 2);
@@ -15526,7 +15528,7 @@ namespace Terraria
 									{
 										if (Main.rand.Next(5000) == 0)
 										{
-											num35 = 74;
+											num35 = 74; // platinum coin
 											if (Main.rand.Next(10) == 0)
 											{
 												num34 += Main.rand.Next(0, 3);
@@ -15552,7 +15554,7 @@ namespace Terraria
 										{
 											if (Main.rand.Next(400) == 0)
 											{
-												num35 = 73;
+												num35 = 73; // gold coin
 												if (Main.rand.Next(5) == 0)
 												{
 													num34 += Main.rand.Next(1, 21);
@@ -15578,7 +15580,7 @@ namespace Terraria
 											{
 												if (Main.rand.Next(30) == 0)
 												{
-													num35 = 72;
+													num35 = 72; // silver coin
 													if (Main.rand.Next(3) == 0)
 													{
 														num34 += Main.rand.Next(5, 26);
@@ -15598,7 +15600,7 @@ namespace Terraria
 												}
 												else
 												{
-													num35 = 71;
+													num35 = 71; // copper coin
 													if (Main.rand.Next(2) == 0)
 													{
 														num34 += Main.rand.Next(10, 26);
@@ -15621,29 +15623,31 @@ namespace Terraria
 									}
 									else
 									{
-										num35 = Main.rand.Next(8);
+										num35 = Main.rand.Next(4);
 										if (num35 == 0)
 										{
-											num35 = 12;
+											num35 = 12; // copper ore
 										}
 										else
 										{
 											if (num35 == 1)
 											{
-												num35 = 11;
+												num35 = 11; // iron ore
 											}
 											else
 											{
 												if (num35 == 2)
 												{
-													num35 = 14;
+													num35 = 14; // silver ore
 												}
 												else
 												{
 													if (num35 == 3)
 													{
-														num35 = 13;
+														num35 = 13; // gold ore
 													}
+													/*
+													// no alt ores
 													else
 													{
 														if (num35 == 4)
@@ -15669,6 +15673,7 @@ namespace Terraria
 															}
 														}
 													}
+													*/
 												}
 											}
 										}
@@ -21050,11 +21055,12 @@ namespace Terraria
 				}
 			}
 		}
+        // mediumcore or hardcore dropping items will just destroy items instead
 		public void DropItems()
 		{
 			for (int i = 0; i < 59; i++)
 			{
-				if (this.inventory[i].stack > 0 && this.inventory[i].name != "Copper Pickaxe" && this.inventory[i].name != "Copper Axe" && this.inventory[i].name != "Copper Shortsword")
+				/*if (this.inventory[i].stack > 0 && this.inventory[i].name != "Copper Pickaxe" && this.inventory[i].name != "Copper Axe" && this.inventory[i].name != "Copper Shortsword")
 				{
 					int num = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.inventory[i].type, 1, false, 0, false);
 					Main.item[num].SetDefaults(this.inventory[i].name);
@@ -21067,11 +21073,11 @@ namespace Terraria
 					{
 						NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f, 0);
 					}
-				}
+				}*/
 				this.inventory[i] = new Item();
 				if (i < 16)
 				{
-					if (this.armor[i].stack > 0)
+					/*if (this.armor[i].stack > 0)
 					{
 						int num2 = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.armor[i].type, 1, false, 0, false);
 						Main.item[num2].SetDefaults(this.armor[i].name);
@@ -21084,12 +21090,12 @@ namespace Terraria
 						{
 							NetMessage.SendData(21, -1, -1, "", num2, 0f, 0f, 0f, 0);
 						}
-					}
+					}*/
 					this.armor[i] = new Item();
 				}
 				if (i < 8)
 				{
-					if (this.dye[i].stack > 0)
+					/*if (this.dye[i].stack > 0)
 					{
 						int num3 = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.dye[i].type, 1, false, 0, false);
 						Main.item[num3].SetDefaults(this.dye[i].name);
@@ -21102,7 +21108,7 @@ namespace Terraria
 						{
 							NetMessage.SendData(21, -1, -1, "", num3, 0f, 0f, 0f, 0);
 						}
-					}
+					}*/
 					this.dye[i] = new Item();
 				}
 			}

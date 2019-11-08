@@ -11666,7 +11666,7 @@ namespace Terraria
 			}
 			return true;
 		}
-		public static void smCallBack(object threadContext)
+		public static void smCallBack(object threadContext) // start Hardmode
 		{
 			if (Main.hardMode)
 			{
