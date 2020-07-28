@@ -33640,7 +33640,7 @@ namespace Terraria
 																																																																																																																																					{
 																																																																																																																																						if (this.type == 2279)
 																																																																																																																																						{
-																																																																																																																																							this.name = "Gypsy Robe";
+																																																																																																																																							this.name = "Romani Robe";
 																																																																																																																																							this.width = 18;
 																																																																																																																																							this.height = 14;
 																																																																																																																																							this.bodySlot = 167;
